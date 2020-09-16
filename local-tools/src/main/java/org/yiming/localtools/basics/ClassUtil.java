@@ -1,7 +1,9 @@
 package org.yiming.localtools.basics;
 
+import javax.annotation.processing.Generated;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.*;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -211,5 +213,41 @@ public class ClassUtil {
             }
         }
         return classes;
+    }
+
+    /**
+     * 判断是否具有指定注解类型
+     * @param clazz 需要判断的类
+     * @param annotationClass 注解类
+     * @param ergodic 是否进行遍历 true 进行遍历 false不进行遍历
+     * @return  true 标识拥有该注解 false 没有该注解
+     */
+    public static boolean verifyAnnotation(Class<?> clazz,Class<?> annotationClass,boolean ergodic){
+        // 获取到clazz的注解
+        Annotation[] annotations = clazz.getAnnotations();
+        if(annotations.length <= 0){
+            return false;
+        }
+
+        // 开始遍历注解
+        for (Annotation annotation : annotations){
+            if (annotation.annotationType() != Deprecated.class &&
+                    annotation.annotationType() != SuppressWarnings.class &&
+                    annotation.annotationType() != Override.class &&
+                    // 该注解为 JDK9中的注解
+                    annotation.annotationType() != Generated.class &&
+                    annotation.annotationType() != Target.class &&
+                    annotation.annotationType() != Retention.class &&
+                    annotation.annotationType() != Documented.class &&
+                    annotation.annotationType() != Inherited.class){
+                if (annotation.annotationType() == annotationClass) {
+                    return true;
+                    // 判断是否进行迭代
+                } else if(ergodic){
+                    return  verifyAnnotation(annotation.annotationType(),annotationClass,ergodic);
+                }
+            }
+        }
+        return false;
     }
 }
