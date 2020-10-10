@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 身份证
+ */
 public class IdCard {
 
     private static final  int OLD_ID_CARD_NUMBER_LENGTH = 15;// 久身份证位数
@@ -23,7 +26,7 @@ public class IdCard {
      * @param idCardNumber 身份证号
      * @return true 为通过校验
      */
-    public static boolean checkChinese(String idCardNumber){
+    public static boolean checkChineseIdCard(String idCardNumber){
         if(idCardNumber != null && !idCardNumber.equals("")){
             // 去掉身份证号的空格
             idCardNumber = idCardNumber.trim();
@@ -31,18 +34,18 @@ public class IdCard {
                 idCardNumber = generateNewIdCardNumber(idCardNumber);
             }
             if(idCardNumber.length() == NEW_ID_CARD_NUMBER_LENGTH){
-                return validate(idCardNumber);
+                return validateChineseIdCard(idCardNumber);
             }
         }
         return false;
     }
 
     /**
-     * 验证
+     * 验证中国身份证
      * @param idCardNumber 身份证号码
-     * @return
+     * @return 验证结果
      */
-    private static boolean validate(String idCardNumber) {
+    private static boolean validateChineseIdCard(String idCardNumber) {
 
         // 身份证基础验证
         if(!idCardNumber.matches("\\d{15}(\\d{2}[0-9xX])?")){
